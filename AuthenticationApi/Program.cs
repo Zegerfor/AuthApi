@@ -43,6 +43,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+var asd = builder.Services.AddScoped<IPostingService, PostingService>();
 
 builder.Services.AddControllers();
 
