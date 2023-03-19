@@ -7,34 +7,34 @@ using System.Text.Json;
 using System.Linq;
 using ContentCreators.Entities;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace AuthenticationApi.Services;
 
 public class PostingService : IPostingService
 {
     private readonly AppDbContext _context;
+    private readonly IHttpContextAccessor _contextAccessor;
 
-    public PostingService(AppDbContext context)
+    public PostingService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
+        _contextAccessor = httpContextAccessor;
     }
     public async Task<Result<string>> AddArticle(AddArticleRequestDto request)
     {
+        var user = _contextAccessor.HttpContext.User;
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
         _context.Article?.Add(new Article
         {
             Title = request.Title,
             Text = request.Text,
-            Created_at = DateTime.Now
+            Created_at = DateTime.Now,
+            UserId = userId
         });
-        //int count = _context.Article.Local.Count;
         _context.SaveChanges();
         return Result.Ok();
     }
-
-    //public Task<Result<string>> DeletePost(LoginRequest request)
-    //{
-    //    throw new NotImplementedException();
-    //}
 
     public async Task<Result<string>> DeleteArticle(int id)
     {
@@ -43,11 +43,11 @@ public class PostingService : IPostingService
             .FirstOrDefault();
         if (article == null)
         {
-            return Result.Fail($"Статья с \"Id: {id}\" отсутствует");
+            return Result.Fail($"Статья с \"Id: {id}\" не найдена");
         }
         _context.Article?.Remove(article);
         _context.SaveChanges();
-        return Result.Ok();
+        return Result.Ok($"Статья с \"Id: {id}\" успешно удалена");
     }
 
     public async Task<Result<string>> FindArticleByText(string text)

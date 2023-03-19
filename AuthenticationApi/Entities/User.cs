@@ -5,5 +5,10 @@ namespace AuthenticationApi.Entities;
 
 public class User : IdentityUser
 {
-    public List<Article> articles { get; set; }
+    public virtual ICollection<Article> Article { get; set; }
+
+    public User()
+    {
+        Article = new List<Article>();
+    }
 }

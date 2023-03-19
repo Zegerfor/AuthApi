@@ -1,4 +1,5 @@
 ﻿using AuthenticationApi.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContentCreators.Entities
 {
@@ -12,6 +13,7 @@ namespace ContentCreators.Entities
 
         public DateTime Created_at { get; set; }
 
-        public virtual User ContentCreator { get; set; }
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

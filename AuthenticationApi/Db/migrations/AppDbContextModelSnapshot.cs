@@ -95,23 +95,22 @@ namespace AuthenticationApi.Db.migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ContentCreatorId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Text")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContentCreatorId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Article");
                 });
@@ -251,11 +250,13 @@ namespace AuthenticationApi.Db.migrations
 
             modelBuilder.Entity("ContentCreators.Entities.Article", b =>
                 {
-                    b.HasOne("AuthenticationApi.Entities.User", "ContentCreator")
-                        .WithMany("articles")
-                        .HasForeignKey("ContentCreatorId");
+                    b.HasOne("AuthenticationApi.Entities.User", "User")
+                        .WithMany("Article")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ContentCreator");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -311,7 +312,7 @@ namespace AuthenticationApi.Db.migrations
 
             modelBuilder.Entity("AuthenticationApi.Entities.User", b =>
                 {
-                    b.Navigation("articles");
+                    b.Navigation("Article");
                 });
 #pragma warning restore 612, 618
         }

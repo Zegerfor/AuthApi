@@ -15,17 +15,15 @@ using ContentCreators.Entities;
 
 namespace AuthenticationApi.Controllers;
 
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ArticlesController : ControllerBase
 {
-    private readonly AppDbContext _context;
     private readonly IPostingService _postingService;
 
     public ArticlesController(AppDbContext context, IPostingService postingService)
     {
-        _context = context;
         _postingService = postingService;
     }
 
@@ -33,6 +31,7 @@ public class ArticlesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResultDto<string>))]
     public async Task<IActionResult> GetArticles()
     {
         var result = await _postingService.GetAllPosts();
