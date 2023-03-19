@@ -99,10 +99,14 @@ namespace AuthenticationApi.Db.migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -112,7 +116,7 @@ namespace AuthenticationApi.Db.migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Article");
+                    b.ToTable("Article", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

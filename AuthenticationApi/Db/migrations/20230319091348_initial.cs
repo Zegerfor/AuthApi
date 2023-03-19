@@ -72,6 +72,28 @@ namespace AuthenticationApi.Db.migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Article",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Article", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Article_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -157,6 +179,11 @@ namespace AuthenticationApi.Db.migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Article_UserId",
+                table: "Article",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -199,6 +226,9 @@ namespace AuthenticationApi.Db.migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Article");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

@@ -40,6 +40,9 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet("FindByTitle")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
     public async Task<IActionResult> GetArticleByTitle(string title)
     {
         var result = await _postingService.FindArticleByTitle(title);
@@ -48,6 +51,9 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet("FindByText")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
     public async Task<IActionResult> GetArticleByText(string text)
     {
         var result = await _postingService.FindArticleByText(text);
@@ -55,6 +61,9 @@ public class ArticlesController : ControllerBase
         return GetResult(result);
     }
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
     public async Task<IActionResult> PostArticle([FromBody] AddArticleRequestDto request)
     {
         var result = await _postingService.AddArticle(request);
@@ -63,6 +72,9 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultDto<string>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
     public async Task<IActionResult> DeleteArticle(int id)
     {
         var result = await _postingService.DeleteArticle(id);

@@ -1,6 +1,7 @@
 ﻿using AuthenticationApi.Dtos;
 using AuthenticationApi.Extensions;
 using AuthenticationApi.Services;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
@@ -25,7 +26,15 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResultDto<string>))]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var result = await _authenticationService.Login(request);
+        Result<string> result;
+        if (!User.Identity.IsAuthenticated)
+        {
+            result = await _authenticationService.Login(request);
+        }
+        else
+        {
+            result = Result.Fail("Пользователь уже авторизован");
+        }
         return GetResult(result);
     }
 
@@ -40,7 +49,7 @@ public class UserController : ControllerBase
         return GetResult(result);
     }
 
-    private IActionResult GetResult(FluentResults.Result<string> result)
+    private IActionResult GetResult(Result<string> result)
     {
         var ResultDto = result.ToResultDto();
 
